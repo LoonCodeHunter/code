@@ -1,0 +1,1 @@
+export{Workspace as CodeWorkspace}from"kovari/workspace";export type WorkspaceSnapshot={root:string;files:readonly string[];capturedAt:number};import{Workspace}from"kovari/workspace";export async function snapshotWorkspace(workspace:Workspace):Promise<WorkspaceSnapshot>{return Object.freeze({root:workspace.root,files:Object.freeze(await workspace.files()),capturedAt:Date.now()})}

@@ -1,0 +1,1 @@
+export{FakeModelProvider}from"kovari/testing";export class FakeCommandExecutor{readonly calls:unknown[]=[];constructor(private result={exitCode:0,stdout:"",stderr:"",durationMs:0,ok:true}){}async run(request:unknown){this.calls.push(request);return{...this.result}}}

@@ -1,0 +1,1 @@
+import{access,readFile}from"node:fs/promises";const p=JSON.parse(await readFile("package.json","utf8"));for(const v of Object.values(p.exports)){if(typeof v==="string")continue;for(const k of["types","import","default"])await access(v[k])}console.log("Exports valid")

@@ -1,0 +1,1 @@
+import test from"node:test";import assert from"node:assert/strict";import{EventBus,Semaphore}from"../dist/index.js";test("Kovari exports are available",()=>{assert.equal(typeof EventBus,"function");assert.equal(typeof Semaphore,"function")})

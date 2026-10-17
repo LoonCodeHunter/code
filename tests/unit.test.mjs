@@ -1,0 +1,1 @@
+import test from"node:test";import assert from"node:assert/strict";import{parseTypeScriptDiagnostics,DiagnosticCollection}from"../dist/index.js";test("diagnostics",()=>assert.equal(parseTypeScriptDiagnostics("x.ts(1,2): error TS1: bad")[0].code,"TS1"));test("collection",()=>assert.equal(new DiagnosticCollection().add({source:"x",severity:"error",message:"x"}).errors().length,1))

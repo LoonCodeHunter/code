@@ -1,0 +1,1 @@
+import{readFile}from"node:fs/promises";for(const[f,w,h]of[["assets/icon.png",512,512],["assets/icon-128.png",128,128]]){const b=await readFile(f);if(b.readUInt32BE(16)!==w||b.readUInt32BE(20)!==h)throw Error(`Invalid ${f}`)}console.log("Assets valid")

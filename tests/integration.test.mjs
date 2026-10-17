@@ -1,0 +1,1 @@
+import test from"node:test";import assert from"node:assert/strict";import{CommandExecutor}from"../dist/index.js";test("command uses Kovari policy and events",async()=>assert.equal((await new CommandExecutor().run({command:process.execPath,args:["-e","process.stdout.write('ok')"]})).stdout,"ok"))
