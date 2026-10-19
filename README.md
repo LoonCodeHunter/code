@@ -1,13 +1,19 @@
-<div align="center"><img src="./assets/icon.png" width="180" height="180" alt="@kovari/code logo"><h1>@kovari/code</h1><p><strong>Advanced repository intelligence and controlled coding effects powered by Kovari.</strong></p></div>
+<div align="center">
+  <img src="./assets/icon.png" width="180" height="180" alt="@kovari/code logo">
+  <h1>@kovari/code</h1>
+  <p><strong>Production-oriented auditable AI agent runtime for the Kovari IDE, desktop app, application and web surfaces.</strong></p>
+  <p><img src="https://img.shields.io/npm/v/kovari?style=for-the-badge\&logo=npm" alt="npm version"> <img src="https://img.shields.io/npm/dm/@kovari/code?style=for-the-badge\&logo=npm" alt="downloads"> <img src="https://img.shields.io/github/actions/workflow/status/LoonCodeHunter/code/ci.yml?branch=main\&style=for-the-badge\&logo=github" alt="CI"> <img src="https://img.shields.io/badge/node-%3E%3D20-339933?style=for-the-badge\&logo=nodedotjs" alt="Node 20+"> <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="MIT"></p>
+</div>
+
 
 ## Overview
-`@kovari/code` builds coding-agent capabilities on the published `kovari` runtime. Shared configuration, events, retries, concurrency, policies, logging, workspaces and testing utilities are imported from `kovari@0.1.1`; this package adds command execution, transactional edits, repository search, Git operations, diagnostics and a composed coding SDK.
+`@kovari/code` builds coding-agent capabilities on the published `kovari` runtime. Shared configuration, events, retries, concurrency, policies, logging, workspaces and testing utilities are imported from `kovari@0.1.11`; this package adds command execution, transactional edits, repository search, Git operations, diagnostics and a composed coding SDK.
 
 ## Install
 ```bash
 npm install @kovari/code
 ```
-The normal dependency installs `kovari@^0.1.1` automatically.
+The normal dependency installs `kovari@^0.1.11` automatically.
 
 ## Quick start
 ```ts

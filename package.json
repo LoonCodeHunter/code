@@ -1,6 +1,6 @@
 {
   "name": "@kovari/code",
-  "version": "0.1.0",
+  "version": "0.1.01",
   "description": "Advanced repository intelligence and controlled coding effects powered by the Kovari runtime.",
   "keywords": [
     "kovari",
@@ -161,7 +161,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "kovari": "^0.1.1"
+    "kovari": "0.1.11"
   },
   "devDependencies": {
     "@types/node": "22.18.11",
