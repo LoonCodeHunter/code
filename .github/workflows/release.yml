@@ -12,4 +12,7 @@ jobs:
         with: { node-version: 22, registry-url: "https://registry.npmjs.org" }
       - run: npm ci --ignore-scripts
       - run: npm run release:check
-      - run: npm publish --access public --provenance
+      - name: Publish package to npm
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

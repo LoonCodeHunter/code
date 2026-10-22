@@ -1,7 +1,7 @@
 {
   "name": "@kovari/code",
-  "version": "0.1.01",
-  "description": "Advanced repository intelligence and controlled coding effects powered by the Kovari runtime.",
+  "version": "0.2.0",
+  "description": "Auditable coding-agent tools for repository search, edits, Git, diagnostics and policy-controlled commands in Kovari Code IDE.",
   "keywords": [
     "kovari",
     "typescript",
@@ -129,7 +129,8 @@
     "API.md",
     "ARCHITECTURE.md",
     "SECURITY.md",
-    "LICENSE"
+    "LICENSE",
+    "docs"
   ],
   "scripts": {
     "clean": "node scripts/clean.mjs",
@@ -161,7 +162,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "kovari": "0.1.11"
+    "kovari": "^0.1.12"
   },
   "devDependencies": {
     "@types/node": "22.18.11",

@@ -3,3 +3,8 @@ coverage/
 *.tgz
 .env
 .DS_Store
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx

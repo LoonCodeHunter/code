@@ -1,9 +1,0 @@
-src/
-tests/
-scripts/
-docs/
-.github/
-coverage/
-*.tgz
-package-lock.json
-tsconfig*.json

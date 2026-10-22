@@ -1,21 +1,83 @@
 import { spawn } from "node:child_process";
+import { randomUUID } from "node:crypto";
 import { PolicyEngine } from "kovari/security";
 import { EventBus } from "kovari/events";
+import { createCodePolicy } from "./security.js";
 export class CommandExecutor {
     policy;
     events;
-    constructor(policy = new PolicyEngine(), events = new EventBus()) {
+    constructor(policy = createCodePolicy(), events = new EventBus()) {
         this.policy = policy;
         this.events = events;
     }
-    async run(r) { await this.policy.authorize({ effect: "process", resource: r.command }); const runId = crypto.randomUUID(), started = Date.now(); await this.events.emit("code.command.started", { command: r.command, args: r.args ?? [] }, runId); const signal = r.signal ? AbortSignal.any([r.signal, AbortSignal.timeout(r.timeoutMs ?? 120000)]) : AbortSignal.timeout(r.timeoutMs ?? 120000); try {
-        const result = await new Promise((resolve, reject) => { const c = spawn(r.command, [...(r.args ?? [])], { cwd: r.cwd, shell: false, windowsHide: true, signal, env: r.env ? { ...process.env, ...r.env } : process.env }); let stdout = "", stderr = ""; c.stdout?.on("data", x => stdout += x); c.stderr?.on("data", x => stderr += x); c.once("error", reject); c.once("close", exitCode => resolve({ exitCode, stdout, stderr, durationMs: Date.now() - started, ok: exitCode === 0 })); });
-        await this.events.emit("code.command.completed", result, runId);
-        return result;
+    async run(request) {
+        if (!request.command || request.command.includes("\0")) {
+            throw new TypeError("command must be a non-empty executable name");
+        }
+        const timeoutMs = request.timeoutMs ?? 120_000;
+        if (!Number.isInteger(timeoutMs) || timeoutMs <= 0) {
+            throw new RangeError("timeoutMs must be a positive integer");
+        }
+        const maxOutputBytes = request.maxOutputBytes ?? 1024 * 1024;
+        if (!Number.isInteger(maxOutputBytes) || maxOutputBytes < 1 || maxOutputBytes > 64 * 1024 * 1024) {
+            throw new RangeError("maxOutputBytes must be an integer from 1 to 67108864");
+        }
+        await this.policy.authorize({ effect: "process", resource: request.command });
+        const runId = randomUUID();
+        const startedAt = Date.now();
+        await this.events.emit("code.command.started", {
+            command: request.command,
+            args: request.args ?? [],
+        }, runId);
+        const signal = request.signal
+            ? AbortSignal.any([request.signal, AbortSignal.timeout(timeoutMs)])
+            : AbortSignal.timeout(timeoutMs);
+        try {
+            const result = await new Promise((resolve, reject) => {
+                const child = spawn(request.command, [...(request.args ?? [])], {
+                    cwd: request.cwd,
+                    shell: false,
+                    windowsHide: true,
+                    signal,
+                    env: request.env ? { ...process.env, ...request.env } : process.env,
+                });
+                const stdoutChunks = [];
+                const stderrChunks = [];
+                const stdoutState = { bytes: 0, truncated: false };
+                const stderrState = { bytes: 0, truncated: false };
+                const capture = (chunks, state, chunk) => {
+                    const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+                    const remaining = Math.max(0, maxOutputBytes - state.bytes);
+                    const kept = bytes.byteLength <= remaining ? bytes : bytes.subarray(0, remaining);
+                    if (kept.byteLength)
+                        chunks.push(kept);
+                    state.bytes += kept.byteLength;
+                    if (kept.byteLength < bytes.byteLength)
+                        state.truncated = true;
+                };
+                child.stdout?.on("data", (chunk) => capture(stdoutChunks, stdoutState, chunk));
+                child.stderr?.on("data", (chunk) => capture(stderrChunks, stderrState, chunk));
+                child.once("error", reject);
+                child.once("close", (exitCode) => {
+                    const marker = (name) => `\n[${name} truncated after ${maxOutputBytes} bytes]`;
+                    const stdout = Buffer.concat(stdoutChunks).toString("utf8") + (stdoutState.truncated ? marker("stdout") : "");
+                    const stderr = Buffer.concat(stderrChunks).toString("utf8") + (stderrState.truncated ? marker("stderr") : "");
+                    resolve({
+                        exitCode,
+                        stdout,
+                        stderr,
+                        durationMs: Date.now() - startedAt,
+                        ok: exitCode === 0,
+                    });
+                });
+            });
+            await this.events.emit("code.command.completed", result, runId);
+            return result;
+        }
+        catch (error) {
+            await this.events.emit("code.command.failed", { error }, runId);
+            throw error;
+        }
     }
-    catch (error) {
-        await this.events.emit("code.command.failed", { error }, runId);
-        throw error;
-    } }
 }
 //# sourceMappingURL=command.js.map

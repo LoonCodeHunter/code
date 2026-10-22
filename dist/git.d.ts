@@ -1,7 +1,7 @@
 import { CommandExecutor } from "./command.js";
 export declare class GitRepository {
     readonly root: string;
-    private commands;
+    private readonly commands;
     constructor(root: string, commands?: CommandExecutor);
     private git;
     status(): Promise<string>;

@@ -7,4 +7,5 @@ export * from "./diagnostics.js";
 export * from "./testing.js";
 export * from "./workspace.js";
 export * from "kovari";
+export { createCodePolicy } from "./security.js";
 //# sourceMappingURL=index.js.map

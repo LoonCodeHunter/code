@@ -6,22 +6,16 @@ export interface PlannedEdit {
 }
 export declare class EditTransaction {
     #private;
-    private workspace;
-    private policy;
+    private readonly workspace;
+    private readonly policy;
     constructor(workspace: Workspace, policy?: PolicyEngine);
     write(path: string, content: string): this;
     preview(): Readonly<{
-        operations: Readonly<{
-            path: string;
-            content: string;
-        }>[];
+        operations: readonly Readonly<PlannedEdit>[];
         paths: readonly string[];
     }>;
     commit(): Promise<Readonly<{
-        operations: Readonly<{
-            path: string;
-            content: string;
-        }>[];
+        operations: readonly Readonly<PlannedEdit>[];
         paths: readonly string[];
     }>>;
 }
